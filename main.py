@@ -42,15 +42,12 @@ img = nib.load(config['t1'])
 data = img.get_data()
 affine = img.affine
 mean, std = data[data > 0].mean(), data[data > 0].std()
-<<<<<<< HEAD
+
 if 'img_min' in config:
     value_range = (mean+ config['img_min'] * std, mean + config['img_max'] * std)
 else: 
     value_range = (mean - 0.5 * std, mean + 2 * std)
-=======
-value_range = (mean - 10 * std, mean + 2 * std)
 
->>>>>>> 4ee35cf4e4dbfd29a0314dd049de65a29cae9e0d
 all_bundles = []
 all_colors = []
 print config["AFQ"]
