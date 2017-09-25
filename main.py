@@ -42,7 +42,7 @@ img = nib.load(config['t1'])
 data = img.get_data()
 affine = img.affine
 mean, std = data[data > 0].mean(), data[data > 0].std()
-value_range = (mean - 0.5 * std, mean + 5 * std)
+value_range = (mean - 2 * std, mean + 2 * std)
 
 all_bundles = []
 all_colors = []
