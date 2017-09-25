@@ -42,23 +42,35 @@ img = nib.load(config['t1'])
 data = img.get_data()
 affine = img.affine
 mean, std = data[data > 0].mean(), data[data > 0].std()
-value_range = (mean - 0.2 * std, mean + 2 * std)
-
+if 'img_min' in config:
+    value_range = (mean+ config['img_min'] * std, mean + config['img_max'] * std)
+else: 
+    value_range = (mean - 0.5 * std, mean + 2 * std)
 all_bundles = []
 all_colors = []
 print config["AFQ"]
 for file in glob.glob(config["AFQ"] + "/*.json"):
 # for file in glob.glob("tracts/*.json"):
     if file != config["AFQ"]+ '/tracts.json':
+        print file
         with open(file) as data_file:
             tract = json.load(data_file)
         bundle = []
-        for i in range(len(tract['coords'])):
-            templine = np.zeros([len(tract['coords'][i][0][0]), 3])
-            templine[:, 0] = tract['coords'][i][0][0]
-            templine[:, 1] = tract['coords'][i][0][1]
-            templine[:, 2] = tract['coords'][i][0][2]
+        if len(tract['coords']) == 1:
+            templine = np.zeros([len(tract['coords'][0][0]), 3])
+            templine[:, 0] = tract['coords'][0][0]
+            templine[:, 1] = tract['coords'][0][1]
+            templine[:, 2] = tract['coords'][0][2]
             bundle.append(templine)
+        elif len(tract['coords']) == 0:
+            bundle = []
+        elif len(tract['coords']) > 1:
+            for i in range(len(tract['coords'])):
+                templine = np.zeros([len(tract['coords'][i][0][0]), 3])
+                templine[:, 0] = tract['coords'][i][0][0]
+                templine[:, 1] = tract['coords'][i][0][1]
+                templine[:, 2] = tract['coords'][i][0][2]
+                bundle.append(templine)
         all_bundles.append(bundle)
         all_colors.append(tract['color'])
         split_name = tract['name'].split(' ')
