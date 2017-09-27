@@ -145,10 +145,15 @@ for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
                     fname='images/alltracts_'+views[d]+'.png',
                     size=(800, 800), offscreen=True,
                     order_transparent=False)
-
+    temp_dict["filename"]='images/alltracts_'+views[d]+'.png'
+    temp_dict["name"]='All Tracts '+views[d].replace('_', ' ') + ' view'
+    temp_dict["desc"]= 'This figure shows All Tracts '+views[d].replace('_', ' ') + ' view'
+    file_list.append(temp_dict)
 
 json_file['images'] = file_list
 with open('images.json', 'w') as f:
     f.write(json.dumps(json_file, indent=4))
+
+print len(file_list)
 
 vdisplay.stop()
