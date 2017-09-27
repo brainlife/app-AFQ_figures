@@ -48,6 +48,7 @@ if 'img_min' in config:
 else: 
     value_range = (mean - 0.5 * std, mean + 2 * std)
 
+
 all_bundles = []
 all_colors = []
 print config["AFQ"]
