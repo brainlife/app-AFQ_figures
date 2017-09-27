@@ -48,11 +48,13 @@ if 'img_min' in config:
 else: 
     value_range = (mean - 0.5 * std, mean + 2 * std)
 
-
+json_file = {}
+file_list = []
 all_bundles = []
 all_colors = []
 print config["AFQ"]
 for file in glob.glob(config["AFQ"] + "/*.json"):
+    temp_dict = {}
 # for file in glob.glob("tracts/*.json"):
     if file != config["AFQ"]+ '/tracts.json':
         print file
@@ -66,7 +68,7 @@ for file in glob.glob(config["AFQ"] + "/*.json"):
             templine[:, 2] = tract['coords'][0][2]
             bundle.append(templine)
         elif len(tract['coords']) == 0:
-            bundle = []
+            bundle = [[],[],[]]
         elif len(tract['coords']) > 1:
             for i in range(len(tract['coords'])):
                 templine = np.zeros([len(tract['coords'][i][0][0]), 3])
@@ -78,11 +80,13 @@ for file in glob.glob(config["AFQ"] + "/*.json"):
         all_colors.append(tract['color'])
         split_name = tract['name'].split(' ')
         imagename = '_'.join(split_name)
-    
+        
+
         for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
             renderer = window.Renderer()
+            
             stream_actor = actor.streamtube(bundle, colors=tract['color'],
-                                            linewidth=1)
+                                                linewidth=1)
             renderer.set_camera(position=camera_pos[d],
                                 focal_point=focal_point[d],
                                 view_up=view_up[d])
@@ -107,7 +111,10 @@ for file in glob.glob(config["AFQ"] + "/*.json"):
                             fname='images/'+imagename+'_'+views[d]+'.png',
                             size=(800, 800), offscreen=True,
                             order_transparent=False)
-
+            temp_dict["filename"]='images/'+imagename+'_'+views[d]+'.png'
+            temp_dict["name"]=imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' view'
+            temp_dict["desc"]= 'This figure shows '+ imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' view'
+            file_list.append(temp_dict)
 
 for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
     renderer = window.Renderer()
@@ -139,5 +146,9 @@ for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
                     size=(800, 800), offscreen=True,
                     order_transparent=False)
 
+
+json_file['images'] = file_list
+with open('images.json', 'w') as f:
+    f.write(json.dumps(json_file))
 
 vdisplay.stop()
