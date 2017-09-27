@@ -149,6 +149,6 @@ for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
 
 json_file['images'] = file_list
 with open('images.json', 'w') as f:
-    f.write(json.dumps(json_file))
+    f.write(json.dumps(json_file, indent=4))
 
 vdisplay.stop()
