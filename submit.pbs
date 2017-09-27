@@ -25,13 +25,11 @@ fi
 
 echo "starting main"
 
-time python $SERVICE_DIR/main.py 
-
-cp $SERVICE_DIR/images.json .
+NUMFILES=`python $SERVICE_DIR/main.py` 
 
 #check for output files
 count=$(ls images/*.png | wc -l)
-if [ $count -eq 84 ];
+if [ $count -eq $NUMFILES ];
 then 
   echo 0 > finished
 else
