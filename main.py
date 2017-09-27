@@ -52,12 +52,12 @@ json_file = {}
 file_list = []
 all_bundles = []
 all_colors = []
-print config["AFQ"]
+#print config["AFQ"]
 for file in glob.glob(config["AFQ"] + "/*.json"):
     temp_dict = {}
 # for file in glob.glob("tracts/*.json"):
     if file != config["AFQ"]+ '/tracts.json':
-        print file
+        #print file
         with open(file) as data_file:
             tract = json.load(data_file)
         bundle = []
