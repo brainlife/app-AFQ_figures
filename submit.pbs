@@ -29,7 +29,7 @@ NUMFILES=`python $SERVICE_DIR/main.py`
 
 #check for output files
 count=$(ls images/*.png | wc -l)
-if [ $count -eq $NUMFILES ];
+if [ $count == $NUMFILES ];
 then 
   echo 0 > finished
 else
