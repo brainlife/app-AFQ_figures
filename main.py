@@ -54,7 +54,6 @@ all_bundles = []
 all_colors = []
 #print config["AFQ"]
 for file in glob.glob(config["AFQ"] + "/*.json"):
-    temp_dict = {}
 # for file in glob.glob("tracts/*.json"):
     if file != config["AFQ"]+ '/tracts.json':
         #print file
@@ -111,6 +110,7 @@ for file in glob.glob(config["AFQ"] + "/*.json"):
                             fname='images/'+imagename+'_'+views[d]+'.png',
                             size=(800, 800), offscreen=True,
                             order_transparent=False)
+            temp_dict = {}
             temp_dict["filename"]='images/'+imagename+'_'+views[d]+'.png'
             temp_dict["name"]=imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' view'
             temp_dict["desc"]= 'This figure shows '+ imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' view'
@@ -145,6 +145,7 @@ for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
                     fname='images/alltracts_'+views[d]+'.png',
                     size=(800, 800), offscreen=True,
                     order_transparent=False)
+    temp_dict = {}
     temp_dict["filename"]='images/alltracts_'+views[d]+'.png'
     temp_dict["name"]='All Tracts '+views[d].replace('_', ' ') + ' view'
     temp_dict["desc"]= 'This figure shows All Tracts '+views[d].replace('_', ' ') + ' view'

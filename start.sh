@@ -7,7 +7,7 @@ if [ -z $SERVICE_DIR ]; then export SERVICE_DIR=`pwd`; fi
 
 rm -f finished
 rm -r images
-
+rm -f images.json
 
 if [ $ENV == "IUHPC" ]; then
 	#clean up previous job (just in case)
