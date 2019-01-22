@@ -16,7 +16,7 @@ This App plots the fibers outputted from AFQ.
 
 ### On Brainlife.io
 
-You can submit this App online at [https://brainlife.io/app/596cdb1a88ae6f0021531d6a#](https://brainlife.io/app/596cdb1a88ae6f0021531d6a#) via the "Execute" tab.
+You can submit this App online at [https://brainlife.io/app/5967b45e81d7ef0021538e89](https://brainlife.io/app/5967b45e81d7ef0021538e89) via the "Execute" tab.
 
 ### Running Locally (on your machine)
 
