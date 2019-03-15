@@ -6,7 +6,6 @@ Created on Fri Jul 14 14:53:50 2017
 @author: lindseykitchell
 """
 
-
 import matplotlib
 matplotlib.use('Agg')
 import glob
@@ -19,7 +18,7 @@ from xvfbwrapper import Xvfb
 
 # start virtual display
 print("starting Xvfb");
-vdisplay = Xvfb(width=800, height=800)
+vdisplay = Xvfb()
 vdisplay.start()
 
 # read json file
