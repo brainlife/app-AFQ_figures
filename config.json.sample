@@ -1,0 +1,9 @@
+{
+    "coronal": 85,
+    "sagittal": 74,
+    "axial": 48,
+    "AFQ": "testdata/track/tracts",
+    "t1": "testdata/anat/t1.nii.gz",
+    "img_max": 2,
+    "img_min": -0.5
+}

@@ -1,10 +1,10 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 Created on Fri Jul 14 14:53:50 2017
 
 @author: lindseykitchell
 """
-
 
 import matplotlib
 matplotlib.use('Agg')
@@ -17,6 +17,7 @@ from dipy.viz import window, actor
 from xvfbwrapper import Xvfb
 
 # start virtual display
+print("starting Xvfb");
 vdisplay = Xvfb()
 vdisplay.start()
 
@@ -24,8 +25,8 @@ vdisplay.start()
 with open('config.json') as config_json:
     config = json.load(config_json)
 
-pwd = os.getcwd()
-os.mkdir(pwd + "/images")
+if not os.path.exists("images"):
+    os.mkdir("images")
 
 camera_pos = [(-5.58, 84.98, 467.47), (-482.32, 3.58, -6.28),
               (-58.32, 454.83, -14.22), (455.46, 9.14, 95.68)]
@@ -40,6 +41,7 @@ views = ['axial', 'sagittal_left', 'coronal', 'sagittal_right']
 # slice_view = [48, 74, 85]
 slice_view = [config['axial'], config['sagittal'], config['coronal']]
 
+print("loading t1");
 img = nib.load(config['t1'])
 data = img.get_data()
 affine = img.affine
@@ -54,11 +56,9 @@ json_file = {}
 file_list = []
 all_bundles = []
 all_colors = []
-#print config["AFQ"]
 for file in glob.glob(config["AFQ"] + "/*.json"):
-# for file in glob.glob("tracts/*.json"):
     if file != config["AFQ"]+ '/tracts.json':
-        #print file
+        print("loading %s" % file)
         with open(file) as data_file:
             tract = json.load(data_file)
         bundle = []
@@ -81,13 +81,12 @@ for file in glob.glob(config["AFQ"] + "/*.json"):
         all_colors.append(tract['color'])
         split_name = tract['name'].split(' ')
         imagename = '_'.join(split_name)
-        
 
         for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
+            print(".. rendering tracts")
+            print(d)
             renderer = window.Renderer()
-            
-            stream_actor = actor.streamtube(bundle, colors=tract['color'],
-                                                linewidth=1)
+            stream_actor = actor.streamtube(bundle, colors=tract['color'], linewidth=1)
             renderer.set_camera(position=camera_pos[d],
                                 focal_point=focal_point[d],
                                 view_up=view_up[d])
@@ -102,23 +101,21 @@ for file in glob.glob(config["AFQ"] + "/*.json"):
                 slice_actor.display(x=int(slice_view[1]))
             renderer.add(slice_actor)
     
-    #        show_m = window.ShowManager(renderer, size=(800, 700))
-    #        show_m.initialize()
-    #        show_m.render()
-    #        show_m.start()
-    #        renderer.camera_info() #get location of camera
-    
-            window.snapshot(renderer,
-                            fname='images/'+imagename+'_'+views[d]+'.png',
-                            size=(800, 800), offscreen=True,
-                            order_transparent=False)
+            print(".. taking photo!");
+            #window.snapshot(renderer, fname='images/'+imagename+'_'+views[d]+'.png', size=(800, 800), offscreen=True)#, order_transparent=False)
+            #window.snapshot(renderer, fname='images/'+imagename+'_'+views[d]+'.png')
+            window.record(renderer, out_path='images/'+imagename+'_'+views[d]+'.png', size=(800, 800))
             temp_dict = {}
             temp_dict["filename"]='images/'+imagename+'_'+views[d]+'.png'
             temp_dict["name"]=imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' view'
             temp_dict["desc"]= 'This figure shows '+ imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' view'
             file_list.append(temp_dict)
 
+
+print("processing all tracts")
 for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
+    print(".. rendering tracts")
+    print(d)
     renderer = window.Renderer()
     for z in range(len(all_bundles)):
         stream_actor = actor.streamtube(all_bundles[z], colors=all_colors[z],
@@ -137,26 +134,21 @@ for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
         slice_actor.display(x=int(slice_view[1]))
     renderer.add(slice_actor)
 
-#        show_m = window.ShowManager(renderer, size=(800, 700))
-#        show_m.initialize()
-#        show_m.render()
-#        show_m.start()
-#        renderer.camera_info() #get location of camera
-
-    window.snapshot(renderer,
-                    fname='images/alltracts_'+views[d]+'.png',
-                    size=(800, 800), offscreen=True,
-                    order_transparent=False)
+    print(".. taking group photo")
+    window.record(renderer, out_path='images/alltracts_'+views[d]+'.png', size=(800,800))
+    #window.snapshot(renderer, fname='images/alltracts_'+views[d]+'.png', size=(800, 800), offscreen=True, order_transparent=False)
     temp_dict = {}
     temp_dict["filename"]='images/alltracts_'+views[d]+'.png'
     temp_dict["name"]='All Tracts '+views[d].replace('_', ' ') + ' view'
     temp_dict["desc"]= 'This figure shows All Tracts '+views[d].replace('_', ' ') + ' view'
     file_list.append(temp_dict)
 
+print("saving images.json")
 json_file['images'] = file_list
 with open('images.json', 'w') as f:
     f.write(json.dumps(json_file, indent=4))
-
-print len(file_list)
+print(len(file_list))
 
 vdisplay.stop()
+
+print("all done");
