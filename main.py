@@ -42,6 +42,7 @@ print("loading streamlines into visualizer")
 stream_actor = actor.line(track.streamlines)
 
 # set camera position
+# need to add check for advanced input camera positions, focal points, viewup, and views: TODOLATER
 camera_pos = [(-5.58, 84.98, 467.47), (-482.32, 3.58, -6.28),
               (-7.65, 421.00, -173.05), (455.46, 9.14, 95.68)]
 focal_point = [(-8.92, -16.15, 4.47), (-8.92, -16.15, 4.47),
