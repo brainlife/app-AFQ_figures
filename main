@@ -3,7 +3,7 @@
 #PBS -N app-AFQ_figures
 #PBS -V
 
-rm -fr images
-rm -f images.json
+rm -rf images
+rm -rf images.json
 
 singularity exec -e docker://brainlife/pythonvtk:1.2 ./main.py
