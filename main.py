@@ -69,7 +69,7 @@ for v in range(len(views)):
 
 	# save pngs
 	print("Creating tractogram png of view %s" %views[v])
-	out_name = '/images/tractogram_'+views[v]+'.png'
+	out_name = './images/tractogram_'+views[v]+'.png'
 	window.record(renderer,out_path=out_name,size=(800,800),reset_camera=False)
 
 	# append information for file list for json output
