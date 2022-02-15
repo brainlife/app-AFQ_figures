@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Created on Fri Jul 14 14:53:50 2017
@@ -19,12 +19,12 @@ from fury import window, actor,ui
 
 
 # THIS IS IMPORTANT FOR RUNNING VIA DOCKER. UNCOMMENT WHEN TESTING WITH DOCKER CONTAINER
-# from xvfbwrapper import Xvfb
+from xvfbwrapper import Xvfb
 
 # start virtual display
-# print("starting Xvfb");
-# vdisplay = Xvfb()
-# vdisplay.start()
+print("starting Xvfb");
+vdisplay = Xvfb()
+vdisplay.start()
 
 # read json file
 with open('config.json') as config_json:
@@ -307,13 +307,13 @@ for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
 
     if camera_flip[d] != False:
 
-    camera_pos[d][camera_flip[d]] *= -1
+        camera_pos[d][camera_flip[d]] *= -1
 
-    renderer.set_camera(position=camera_pos[d],
-                        focal_point=focal_point[d],
-                        view_up=view_up[d])
-    # window.show(renderer,reset_camera=False)
-    window.record(renderer, out_path='images/alltracts_'+'_'+views[d]+'_flipped.png', size=(800, 800))
+        renderer.set_camera(position=camera_pos[d],
+                            focal_point=focal_point[d],
+                            view_up=view_up[d])
+        # window.show(renderer,reset_camera=False)
+        window.record(renderer, out_path='images/alltracts_'+'_'+views[d]+'_flipped.png', size=(800, 800))
 
 
 # THIS WILL ADD ALL TRACT IMAGES TO JSON STRUCTURE. WILL NOT WORK WITH NEW FLIPPED IMAGES
@@ -331,6 +331,6 @@ for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
 
 
 # THIS IS IMPORTANT FOR USING IN DOCKER CONTAINER! UNCOMMENT THIS WHEN TESTING WITH DOCKER CONTAINER
-# vdisplay.stop()
+vdisplay.stop()
 
 print("all done");

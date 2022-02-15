@@ -1,9 +1,9 @@
 {
-    "coronal": 85,
-    "sagittal": 74,
-    "axial": 48,
-    "AFQ": "testdata/track/tracts",
-    "t1": "testdata/anat/t1.nii.gz",
-    "img_max": 2,
-    "img_min": -0.5
+	"anat":	"/path/to/data/anat/t1.nii.gz",
+	"AFQ":	"/path/to/data/wmc/tracts",
+	"axial":	"",
+	"sagittal":	"",
+	"coronal":	"",
+	"img_min":	"",
+	"img_max":	""
 }
