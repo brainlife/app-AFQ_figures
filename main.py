@@ -236,6 +236,23 @@ for file in sorted(glob.glob(config["AFQ"] + "/*.json")):
         print(".. rendering tracts")
         print(d)
 
+        # add image information to json structure
+        temp_dict = {}
+        temp_dict["filename"]='images/'+imagename+'_'+views[d]+'.png'
+        temp_dict["name"]=imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' view'
+        temp_dict["desc"]= 'This figure shows '+ imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' view'
+        file_list.append(temp_dict)
+
+        # add flipped image path
+        if camera_flip[d] != False:
+            temp_dict = {}
+            temp_dict["filename"]='images'+imagename+'_'+views[d]+'_flipped.png'
+
+            temp_dict["name"]=imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' flipped view'
+
+            temp_dict["desc"]= 'This figure shows '+ imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' flipped view'
+            file_list.append(temp_dict)
+
         stream_actor = actor.streamtube(bundle, colors=tract['color'], linewidth=0.5)
 
         renderer.add(stream_actor)
@@ -271,18 +288,26 @@ for file in sorted(glob.glob(config["AFQ"] + "/*.json")):
             record(renderer, out_path='images/'+imagename+'_'+views[d]+'_flipped.png', size=(800, 800))
 
         renderer.clear()
-    # this is to build a json containing information about all of the images generated. this won't work with the new camera flipping
-    # temp_dict = {}
-    # temp_dict["filename"]='images/'+imagename+'_'+views[d]+'.png'
-    # temp_dict["name"]=imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' view'
-    # temp_dict["desc"]= 'This figure shows '+ imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' view'
-    # file_list.append(temp_dict)
-
 
 # print("processing all tracts") # THIS IS TO GENERATE IMAGE OF ALL TRACTS COMBINED TOGETHER
 for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
     print(".. rendering tracts")
     print(d)
+
+    # add image information to json structure
+    temp_dict = {}
+    temp_dict["filename"]='images/alltracts_'+views[d]+'.png'
+    temp_dict["name"]='All Tracts '+views[d].replace('_', ' ') + ' view'
+    temp_dict["desc"]= 'This figure shows All Tracts '+views[d].replace('_', ' ') + ' view'
+    file_list.append(temp_dict)
+
+    # add flipped image path
+    if camera_flip[d] != False:
+        temp_dict = {}
+        temp_dict["filename"]='images/alltracts_'+views[d]+'_flipped.png'
+        temp_dict["name"]='All Tracts '+views[d].replace('_', ' ') + ' flipped view'
+        temp_dict["desc"]= 'This figure shows All Tracts '+views[d].replace('_', ' ') + ' flipped view'
+        file_list.append(temp_dict)
 
     for z in range(len(all_bundles)):
         stream_actor = actor.streamtube(all_bundles[z], colors=all_colors[z],
@@ -314,23 +339,14 @@ for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
         renderer.set_camera(position=camera_pos[d],
                             focal_point=focal_point[d],
                             view_up=view_up[d])
-        # window.show(renderer,reset_camera=False)
+
         record(renderer, out_path='images/alltracts_'+'_'+views[d]+'_flipped.png', size=(800, 800))
 
-    renderer.clear()
-
-# THIS WILL ADD ALL TRACT IMAGES TO JSON STRUCTURE. WILL NOT WORK WITH NEW FLIPPED IMAGES
-    # temp_dict = {}
-    # temp_dict["filename"]='images/alltracts_'+views[d]+'.png'
-    # temp_dict["name"]='All Tracts '+views[d].replace('_', ' ') + ' view'
-    # temp_dict["desc"]= 'This figure shows All Tracts '+views[d].replace('_', ' ') + ' view'
-    # file_list.append(temp_dict)
-
 # print("saving images.json")
-# json_file['images'] = file_list
-# with open('images.json', 'w') as f:
-#     f.write(json.dumps(json_file, indent=4))
-# print(len(file_list))
+json_file['images'] = file_list
+with open('images.json', 'w') as f:
+    f.write(json.dumps(json_file, indent=4))
+print(len(file_list))
 
 close()
 
