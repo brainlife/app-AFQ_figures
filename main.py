@@ -17,6 +17,7 @@ import numpy as np
 import nibabel as nib
 from fury import window, actor,ui
 
+from lib import record, close
 
 # THIS IS IMPORTANT FOR RUNNING VIA DOCKER. UNCOMMENT WHEN TESTING WITH DOCKER CONTAINER
 from xvfbwrapper import Xvfb
@@ -186,9 +187,10 @@ slice_view = [axial_view,sagittal_view,coronal_view]
 #         # window.show(renderer,reset_camera=False)
 #         window.record(renderer, out_path='images/'+imagename+'_'+views[d]+'_flipped.png', size=(800, 800))
 
+renderer = window.Scene()
 
 # iterate through all tracts
-for file in glob.glob(config["AFQ"] + "/*.json"):
+for file in sorted(glob.glob(config["AFQ"] + "/*.json")):
     if file != config["AFQ"]+ '/tracts.json':
         print("loading %s" % file)
         with open(file) as data_file:
@@ -234,7 +236,6 @@ for file in glob.glob(config["AFQ"] + "/*.json"):
         print(".. rendering tracts")
         print(d)
 
-        renderer = window.Scene()
         stream_actor = actor.streamtube(bundle, colors=tract['color'], linewidth=0.5)
 
         renderer.add(stream_actor)
@@ -257,7 +258,7 @@ for file in glob.glob(config["AFQ"] + "/*.json"):
 
         # window.show(renderer,reset_camera=False)
 
-        window.record(renderer, out_path='images/'+imagename+'_'+views[d]+'.png', size=(800, 800))
+        record(renderer, out_path='images/'+imagename+'_'+views[d]+'.png', size=(800, 800))
 
         if camera_flip[d] != False:
 
@@ -267,8 +268,9 @@ for file in glob.glob(config["AFQ"] + "/*.json"):
                                 focal_point=focal_point[d],
                                 view_up=view_up[d])
             # window.show(renderer,reset_camera=False)
-            window.record(renderer, out_path='images/'+imagename+'_'+views[d]+'_flipped.png', size=(800, 800))
+            record(renderer, out_path='images/'+imagename+'_'+views[d]+'_flipped.png', size=(800, 800))
 
+        renderer.clear()
     # this is to build a json containing information about all of the images generated. this won't work with the new camera flipping
     # temp_dict = {}
     # temp_dict["filename"]='images/'+imagename+'_'+views[d]+'.png'
@@ -281,7 +283,7 @@ for file in glob.glob(config["AFQ"] + "/*.json"):
 for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
     print(".. rendering tracts")
     print(d)
-    renderer = window.Scene()
+
     for z in range(len(all_bundles)):
         stream_actor = actor.streamtube(all_bundles[z], colors=all_colors[z],
                                         linewidth=.5)
@@ -303,7 +305,7 @@ for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
     renderer.add(slice_actor)
 
     # window.show(renderer,reset_camera=False)
-    window.record(renderer, out_path='images/alltracts_'+'_'+views[d]+'.png', size=(800, 800))
+    record(renderer, out_path='images/alltracts_'+'_'+views[d]+'.png', size=(800, 800))
 
     if camera_flip[d] != False:
 
@@ -313,8 +315,9 @@ for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
                             focal_point=focal_point[d],
                             view_up=view_up[d])
         # window.show(renderer,reset_camera=False)
-        window.record(renderer, out_path='images/alltracts_'+'_'+views[d]+'_flipped.png', size=(800, 800))
+        record(renderer, out_path='images/alltracts_'+'_'+views[d]+'_flipped.png', size=(800, 800))
 
+    renderer.clear()
 
 # THIS WILL ADD ALL TRACT IMAGES TO JSON STRUCTURE. WILL NOT WORK WITH NEW FLIPPED IMAGES
     # temp_dict = {}
@@ -329,6 +332,7 @@ for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
 #     f.write(json.dumps(json_file, indent=4))
 # print(len(file_list))
 
+close()
 
 # THIS IS IMPORTANT FOR USING IN DOCKER CONTAINER! UNCOMMENT THIS WHEN TESTING WITH DOCKER CONTAINER
 vdisplay.stop()
