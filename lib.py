@@ -19,6 +19,8 @@ def close():
     iren.TerminateApp()
     renWin.Finalize()
 
+
+# https://github.com/fury-gl/fury/blob/master/fury/window.py#L674
 def record(scene, cam_pos=None, cam_focal=None, cam_view=None,
            out_path=None, path_numbering=False, n_frames=1, az_ang=10,
            magnification=1, size=(300, 300), reset_camera=True,
