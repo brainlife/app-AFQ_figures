@@ -188,7 +188,7 @@ slice_view = [axial_view,sagittal_view,coronal_view]
 
 
 # iterate through all tracts
-for file in glob.glob(config["AFQ"] + "/*.json"):
+for file in sorted(glob.glob(config["AFQ"] + "/*.json")):
     if file != config["AFQ"]+ '/tracts.json':
         print("loading %s" % file)
         with open(file) as data_file:
@@ -234,6 +234,23 @@ for file in glob.glob(config["AFQ"] + "/*.json"):
         print(".. rendering tracts")
         print(d)
 
+        # add image information to json structure
+        temp_dict = {}
+        temp_dict["filename"]='images/'+imagename+'_'+views[d]+'.png'
+        temp_dict["name"]=imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' view'
+        temp_dict["desc"]= 'This figure shows '+ imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' view'
+        file_list.append(temp_dict)
+
+        # add flipped image path
+        if camera_flip[d] != False:
+            temp_dict = {}
+            temp_dict["filename"]='images'+imagename+'_'+views[d]+'_flipped.png'
+
+            temp_dict["name"]=imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' flipped view'
+
+            temp_dict["desc"]= 'This figure shows '+ imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' flipped view'
+            file_list.append(temp_dict)
+
         renderer = window.Scene()
         stream_actor = actor.streamtube(bundle, colors=tract['color'], linewidth=0.5)
 
@@ -269,18 +286,26 @@ for file in glob.glob(config["AFQ"] + "/*.json"):
             # window.show(renderer,reset_camera=False)
             window.record(renderer, out_path='images/'+imagename+'_'+views[d]+'_flipped.png', size=(800, 800))
 
-    # this is to build a json containing information about all of the images generated. this won't work with the new camera flipping
-    # temp_dict = {}
-    # temp_dict["filename"]='images/'+imagename+'_'+views[d]+'.png'
-    # temp_dict["name"]=imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' view'
-    # temp_dict["desc"]= 'This figure shows '+ imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' view'
-    # file_list.append(temp_dict)
-
-
 # print("processing all tracts") # THIS IS TO GENERATE IMAGE OF ALL TRACTS COMBINED TOGETHER
 for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
     print(".. rendering tracts")
     print(d)
+
+    # add image information to json structure
+    temp_dict = {}
+    temp_dict["filename"]='images/alltracts_'+views[d]+'.png'
+    temp_dict["name"]='All Tracts '+views[d].replace('_', ' ') + ' view'
+    temp_dict["desc"]= 'This figure shows All Tracts '+views[d].replace('_', ' ') + ' view'
+    file_list.append(temp_dict)
+
+    # add flipped image path
+    if camera_flip[d] != False:
+        temp_dict = {}
+        temp_dict["filename"]='images/alltracts_'+views[d]+'_flipped.png'
+        temp_dict["name"]='All Tracts '+views[d].replace('_', ' ') + ' flipped view'
+        temp_dict["desc"]= 'This figure shows All Tracts '+views[d].replace('_', ' ') + ' flipped view'
+        file_list.append(temp_dict)
+
     renderer = window.Scene()
     for z in range(len(all_bundles)):
         stream_actor = actor.streamtube(all_bundles[z], colors=all_colors[z],
@@ -312,23 +337,14 @@ for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
         renderer.set_camera(position=camera_pos[d],
                             focal_point=focal_point[d],
                             view_up=view_up[d])
-        # window.show(renderer,reset_camera=False)
+        window.show(renderer,reset_camera=False)
         window.record(renderer, out_path='images/alltracts_'+'_'+views[d]+'_flipped.png', size=(800, 800))
 
-
-# THIS WILL ADD ALL TRACT IMAGES TO JSON STRUCTURE. WILL NOT WORK WITH NEW FLIPPED IMAGES
-    # temp_dict = {}
-    # temp_dict["filename"]='images/alltracts_'+views[d]+'.png'
-    # temp_dict["name"]='All Tracts '+views[d].replace('_', ' ') + ' view'
-    # temp_dict["desc"]= 'This figure shows All Tracts '+views[d].replace('_', ' ') + ' view'
-    # file_list.append(temp_dict)
-
 # print("saving images.json")
-# json_file['images'] = file_list
-# with open('images.json', 'w') as f:
-#     f.write(json.dumps(json_file, indent=4))
-# print(len(file_list))
-
+json_file['images'] = file_list
+with open('images.json', 'w') as f:
+    f.write(json.dumps(json_file, indent=4))
+print(len(file_list))
 
 # THIS IS IMPORTANT FOR USING IN DOCKER CONTAINER! UNCOMMENT THIS WHEN TESTING WITH DOCKER CONTAINER
 vdisplay.stop()
