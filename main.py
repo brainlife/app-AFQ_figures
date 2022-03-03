@@ -44,7 +44,7 @@ all_colors = []
 # load t1
 print("loading t1")
 t1 = nib.load(config['anat'])
-t1_img = t1.get_data()
+t1_img = t1.get_fdata()
 
 # find shape of t1
 sz = np.shape(t1_img)
