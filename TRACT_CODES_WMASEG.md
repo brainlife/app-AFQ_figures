@@ -1,4 +1,4 @@
-The table below identifies the codes required to be provided to the app when subsampling tracts for plotting:
+The table below identifies the WMASeg codes required to be provided to the app when subsampling tracts for plotting:
 
 | Code | Tract Name |
 |---|---|
