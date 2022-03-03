@@ -44,7 +44,7 @@ all_colors = []
 # load t1
 print("loading t1")
 t1 = nib.load(config['anat'])
-t1_img = t1.get_data()
+t1_img = t1.get_fdata()
 
 # find shape of t1
 sz = np.shape(t1_img)
@@ -190,17 +190,32 @@ slice_view = [axial_view,sagittal_view,coronal_view]
 renderer = window.Scene()
 
 # iterate through all tracts
-for file in sorted(glob.glob(config["AFQ"] + "/*.json")):
-    if file != config["AFQ"]+ '/tracts.json':
-        print("loading %s" % file)
-        with open(file) as data_file:
-            tract = json.load(data_file)
-        bundle = []
-        min_x = 0
-        min_y = 0
-        min_z = 0
+#for file in sorted(glob.glob(config["AFQ"] + "/*.json")):
+#    if file != config["AFQ"]+ '/tracts.json':
 
-    if len(tract['coords']) == 1:
+tract_paths = []
+if config['tracts'] == "":
+    for file in sorted(glob.glob(config["AFQ"] + "/*.json")):
+        if file != config["AFQ"]+ '/tracts.json':
+            tract_paths.append(file)
+else:
+    tract_names = config['tracts']
+    with open(config["AFQ"]+ '/tracts.json') as data_file:
+        all_tracts = json.load(data_file)
+    for item in all_tracts:
+        if item['name'] in tract_names:
+            tract_paths.append(config["AFQ"] + "/" + item['filename'])
+
+for file in tract_paths:
+    print("loading %s" % file)
+    with open(file) as data_file:
+        tract = json.load(data_file)
+    bundle = []
+    min_x = 0
+    min_y = 0
+    min_z = 0
+
+    if np.shape(tract['coords'])[0] == 1 & np.shape(tract['coords'])[1] == 1:
         templine = np.zeros([len(tract['coords'][0][0]), 3])
         templine[:, 0] = tract['coords'][0][0]
         templine[:, 1] = tract['coords'][0][1]
@@ -211,7 +226,9 @@ for file in sorted(glob.glob(config["AFQ"] + "/*.json")):
         min_z = np.min(bundle[2])
     elif len(tract['coords']) == 0:
         bundle = [[],[],[]]
-    elif len(tract['coords']) > 1:
+    elif np.shape(tract['coords'])[0] > 1 or np.shape(tract['coords'])[1] > 1:
+        if np.shape(tract['coords'])[0] < np.shape(tract['coords'])[1]:
+            tract['coords'] = np.array(tract['coords']).swapaxes(0,1)
         for i in range(len(tract['coords'])):
             templine = np.zeros([len(tract['coords'][i][0][0]), 3])
             templine[:, 0] = tract['coords'][i][0][0]
