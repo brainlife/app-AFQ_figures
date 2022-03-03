@@ -2,13 +2,13 @@ The table below identifies the codes required to be provided to the app when sub
 
 | Code | Tract Name |
 |---|---|
-| forcepsMinor | Forceps Minor |
-| forcepsMajor | Forceps Major |
+| forcepsMinor | Forceps Minor / Anterior Forceps |
+| forcepsMajor | Forceps Major / Posterior Forceps |
 | parietalCC | Parietal Corpus Callosum Tract |
 | middleFrontalCC | Middle Corpus Callosum Tract |
 | anterioFrontalCC | Anterio-Frontal Corpus Callosum Tract |
-| leftcingulum | Left Cingulum |
-| rightcingulum | Right Cingulum |
+| leftcingulum | Left Cingulum Tract |
+| rightcingulum | Right Cingulum Tract |
 | leftUncinate | Left Uncinate Fasciculus |
 | rightUncinate | Right Uncinate Fasciculus |
 | leftIFOF | Left Inferior Fronto-Occipital Fasciculus |
@@ -37,28 +37,28 @@ The table below identifies the codes required to be provided to the app when sub
 | rightMDLFang | Right Middle Longitudinal Fasciculus - Superior Angular Gyrus Component |
 | leftMDLFspl | Left Middle Longitudinal Fasciculus - Superior Parietal Lobule Component |
 | rightMDLFspl | Right Middle Longitudinal Fasciculus - Superior Parietal Lobule Component |
-| leftpArc | Left Posterior Arcuate |
-| rightpArc | Right Posterior Arcuate |
-| leftTPC | Left Temporo-Ponto-Cerebellar |
-| rightTPC | Right Temporo-Ponto-Cerebellar |
+| leftpArc | Left Posterior Arcuate Fasciculus |
+| rightpArc | Right Posterior Arcuate Fasciculus |
+| leftTPC | Left Temporo-Ponto-Cerebellar Tract |
+| rightTPC | Right Temporo-Ponto-Cerebellar Tract |
 | leftmeyer | Left Meyer's Loop |
 | rightmeyer | Right Meyer's Loop |
 | leftbaum | Left Baum's Loop |
 | rightbaum | Right Baum's Loop |
-| leftMotorCerebellar | Left Motor-Cerebellar |
-| rightMotorCerebellar | Right Motor-Cerebellar |
-| leftAnterioFrontoCerebellar | Left Anterio-Fronto-Cerebellar |
-| rightAnterioFrontoCerebellar | Right Anterio-Fronto-Cerebellar |
-| leftThalamicoCerebellar | Left Thalamico-Cerebellar |
-| rightThalamicoCerebellar | RIght Thalamico-Cerebellar |
-| leftOccipitoCerebellar | Left Occipito-Cerebellar |
-| rightOccipitoCerebellar | Right Occipito-Cerebellar |
-| leftParietoCerebellar | Left Parieto-Cerebellar |
-| rightParietoCerebellar | Right Parieto-Cerebellar |
-| leftContraMotorCerebellar | Left Contra-Motor-Cerebellar |
-| rightContraMotorCerebellar | Right Contra-Motor-Cerebellar |
-| leftContraAnterioFrontoCerebellar | Left Contra-Anterio-Fronto-Cerebellar |
-| rightContraAnterioFrontoCerebellar | Right Contra-Anterio-Fronto-Cerebellar |
+| leftMotorCerebellar | Left Motor-Cerebellar Tract |
+| rightMotorCerebellar | Right Motor-Cerebellar Tract |
+| leftAnterioFrontoCerebellar | Left Anterio-Fronto-Cerebellar Tract |
+| rightAnterioFrontoCerebellar | Right Anterio-Fronto-Cerebellar Tract |
+| leftThalamicoCerebellar | Left Thalamico-Cerebellar Tract |
+| rightThalamicoCerebellar | RIght Thalamico-Cerebellar Tract |
+| leftOccipitoCerebellar | Left Occipito-Cerebellar Tract |
+| rightOccipitoCerebellar | Right Occipito-Cerebellar Tract |
+| leftParietoCerebellar | Left Parieto-Cerebellar Tract |
+| rightParietoCerebellar | Right Parieto-Cerebellar Tract |
+| leftContraMotorCerebellar | Left Contra-Motor-Cerebellar Tract |
+| rightContraMotorCerebellar | Right Contra-Motor-Cerebellar Tract |
+| leftContraAnterioFrontoCerebellar | Left Contra-Anterio-Fronto-Cerebellar Tract |
+| rightContraAnterioFrontoCerebellar | Right Contra-Anterio-Fronto-Cerebellar Tract |
 | leftVOF | Left Vertical Occipital Fasciculus |
 | rightVOF | Right Vertical Occipital Fasciculus |
 | leftCST | Left Corticospinal Tract |
