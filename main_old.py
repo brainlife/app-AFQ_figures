@@ -44,7 +44,7 @@ all_colors = []
 # load t1
 print("loading t1")
 t1 = nib.load(config['anat'])
-t1_img = t1.get_fdata()
+t1_img = t1.get_data()
 
 # find shape of t1
 sz = np.shape(t1_img)
@@ -241,6 +241,31 @@ for file in tract_paths:
                 min_y = np.round(np.min(bundle[i][1]))
             if np.min(bundle[i][2]) < min_z:
                 min_z = np.round(np.min(bundle[i][2]))
+
+    # if len(tract['coords']) == 1:
+    #     templine = np.zeros([len(tract['coords'][0][0]), 3])
+    #     templine[:, 0] = tract['coords'][0][0]
+    #     templine[:, 1] = tract['coords'][0][1]
+    #     templine[:, 2] = tract['coords'][0][2]
+    #     bundle.append(templine)
+    #     min_x = np.min(bundle[0])
+    #     min_y = np.min(bundle[1])
+    #     min_z = np.min(bundle[2])
+    # elif len(tract['coords']) == 0:
+    #     bundle = [[],[],[]]
+    # elif len(tract['coords']) > 1:
+    #     for i in range(len(tract['coords'])):
+    #         templine = np.zeros([len(tract['coords'][i][0][0]), 3])
+    #         templine[:, 0] = tract['coords'][i][0][0]
+    #         templine[:, 1] = tract['coords'][i][0][1]
+    #         templine[:, 2] = tract['coords'][i][0][2]
+    #         bundle.append(templine)
+    #         if np.min(bundle[i][0]) < min_x:
+    #             min_x = np.round(np.min(bundle[i][0]))
+    #         if np.min(bundle[i][1]) < min_y:
+    #             min_y = np.round(np.min(bundle[i][1]))
+    #         if np.min(bundle[i][2]) < min_z:
+    #             min_z = np.round(np.min(bundle[i][2]))
     #slice_view = [min_x,min_y,min_z]
     all_bundles.append(bundle)
     all_colors.append(tract['color'])
