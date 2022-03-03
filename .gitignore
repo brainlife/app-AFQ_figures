@@ -13,3 +13,16 @@ output.mat
 images/
 *.nii.gz
 t1*
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.ipynb_checkpoints
+profile_default/
+ipython_config.py
+__pypackages__/
