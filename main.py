@@ -190,104 +190,119 @@ slice_view = [axial_view,sagittal_view,coronal_view]
 renderer = window.Scene()
 
 # iterate through all tracts
-for file in sorted(glob.glob(config["AFQ"] + "/*.json")):
-    if file != config["AFQ"]+ '/tracts.json':
-        print("loading %s" % file)
-        with open(file) as data_file:
-            tract = json.load(data_file)
-        bundle = []
-        min_x = 0
-        min_y = 0
-        min_z = 0
+#for file in sorted(glob.glob(config["AFQ"] + "/*.json")):
+#    if file != config["AFQ"]+ '/tracts.json':
 
-    if len(tract['coords']) == 1:
-        templine = np.zeros([len(tract['coords'][0][0]), 3])
-        templine[:, 0] = tract['coords'][0][0]
-        templine[:, 1] = tract['coords'][0][1]
-        templine[:, 2] = tract['coords'][0][2]
+tract_paths = []
+if config['tracts'] == "":
+    for file in sorted(glob.glob(config["AFQ"] + "/*.json")): 
+        if file != config["AFQ"]+ '/tracts.json': 
+            tract_paths.append(file)
+else:
+    tract_names = config['tracts']
+    with open(config["AFQ"]+ '/tracts.json') as data_file: 
+        all_tracts = json.load(data_file) 
+    for item in all_tracts: 
+        if item['name'] in tract_names: 
+            tract_paths.append(config["AFQ"] + "/" + item['filename'])  
+
+for file in tract_paths:            
+    print("loading %s" % file)
+    with open(file) as data_file:
+        tract = json.load(data_file)
+    bundle = []
+    min_x = 0
+    min_y = 0
+    min_z = 0
+
+if len(tract['coords']) == 1:
+    templine = np.zeros([len(tract['coords'][0][0]), 3])
+    templine[:, 0] = tract['coords'][0][0]
+    templine[:, 1] = tract['coords'][0][1]
+    templine[:, 2] = tract['coords'][0][2]
+    bundle.append(templine)
+    min_x = np.min(bundle[0])
+    min_y = np.min(bundle[1])
+    min_z = np.min(bundle[2])
+elif len(tract['coords']) == 0:
+    bundle = [[],[],[]]
+elif len(tract['coords']) > 1:
+    for i in range(len(tract['coords'])):
+        templine = np.zeros([len(tract['coords'][i][0][0]), 3])
+        templine[:, 0] = tract['coords'][i][0][0]
+        templine[:, 1] = tract['coords'][i][0][1]
+        templine[:, 2] = tract['coords'][i][0][2]
         bundle.append(templine)
-        min_x = np.min(bundle[0])
-        min_y = np.min(bundle[1])
-        min_z = np.min(bundle[2])
-    elif len(tract['coords']) == 0:
-        bundle = [[],[],[]]
-    elif len(tract['coords']) > 1:
-        for i in range(len(tract['coords'])):
-            templine = np.zeros([len(tract['coords'][i][0][0]), 3])
-            templine[:, 0] = tract['coords'][i][0][0]
-            templine[:, 1] = tract['coords'][i][0][1]
-            templine[:, 2] = tract['coords'][i][0][2]
-            bundle.append(templine)
-            if np.min(bundle[i][0]) < min_x:
-                min_x = np.round(np.min(bundle[i][0]))
-            if np.min(bundle[i][1]) < min_y:
-                min_y = np.round(np.min(bundle[i][1]))
-            if np.min(bundle[i][2]) < min_z:
-                min_z = np.round(np.min(bundle[i][2]))
-    #slice_view = [min_x,min_y,min_z]
-    all_bundles.append(bundle)
-    all_colors.append(tract['color'])
-    split_name = tract['name'].split(' ')
-    imagename = '_'.join(split_name)
+        if np.min(bundle[i][0]) < min_x:
+            min_x = np.round(np.min(bundle[i][0]))
+        if np.min(bundle[i][1]) < min_y:
+            min_y = np.round(np.min(bundle[i][1]))
+        if np.min(bundle[i][2]) < min_z:
+            min_z = np.round(np.min(bundle[i][2]))
+#slice_view = [min_x,min_y,min_z]
+all_bundles.append(bundle)
+all_colors.append(tract['color'])
+split_name = tract['name'].split(' ')
+imagename = '_'.join(split_name)
 
-    print(np.array(bundle).shape)
+print(np.array(bundle).shape)
 
-    for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
-        print(".. rendering tracts")
-        print(d)
+for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
+    print(".. rendering tracts")
+    print(d)
 
-        # add image information to json structure
+    # add image information to json structure
+    temp_dict = {}
+    temp_dict["filename"]='images/'+imagename+'_'+views[d]+'.png'
+    temp_dict["name"]=imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' view'
+    temp_dict["desc"]= 'This figure shows '+ imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' view'
+    file_list.append(temp_dict)
+
+    # add flipped image path
+    if camera_flip[d] != False:
         temp_dict = {}
-        temp_dict["filename"]='images/'+imagename+'_'+views[d]+'.png'
-        temp_dict["name"]=imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' view'
-        temp_dict["desc"]= 'This figure shows '+ imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' view'
+        temp_dict["filename"]='images'+imagename+'_'+views[d]+'_flipped.png'
+
+        temp_dict["name"]=imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' flipped view'
+
+        temp_dict["desc"]= 'This figure shows '+ imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' flipped view'
         file_list.append(temp_dict)
 
-        # add flipped image path
-        if camera_flip[d] != False:
-            temp_dict = {}
-            temp_dict["filename"]='images'+imagename+'_'+views[d]+'_flipped.png'
+    stream_actor = actor.streamtube(bundle, colors=tract['color'], linewidth=0.5)
 
-            temp_dict["name"]=imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' flipped view'
+    renderer.add(stream_actor)
+    slice_actor = actor.slicer(t1_img, affine)
+    slice_actor.opacity(1)
+    if d == 0: # axial
+        slice_actor.display(z=int(slice_view[2]))
+    elif d == 2: # coronal
+        slice_actor.display(y=int(slice_view[1]))
+    else: # left/right sagittal
+        slice_actor.display(x=int(slice_view[0]))
 
-            temp_dict["desc"]= 'This figure shows '+ imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' flipped view'
-            file_list.append(temp_dict)
+    renderer.add(slice_actor)
+    renderer.set_camera(position=camera_pos[d],
+                        focal_point=focal_point[d],
+                        view_up=view_up[d])
+    renderer.reset_clipping_range()
 
-        stream_actor = actor.streamtube(bundle, colors=tract['color'], linewidth=0.5)
+    print(".. taking photo!");
 
-        renderer.add(stream_actor)
-        slice_actor = actor.slicer(t1_img, affine)
-        slice_actor.opacity(1)
-        if d == 0: # axial
-            slice_actor.display(z=int(slice_view[2]))
-        elif d == 2: # coronal
-            slice_actor.display(y=int(slice_view[1]))
-        else: # left/right sagittal
-            slice_actor.display(x=int(slice_view[0]))
+    # window.show(renderer,reset_camera=False)
 
-        renderer.add(slice_actor)
+    record(renderer, out_path='images/'+imagename+'_'+views[d]+'.png', size=(800, 800))
+
+    if camera_flip[d] != False:
+
+        camera_pos[d][camera_flip[d]] *= -1
+
         renderer.set_camera(position=camera_pos[d],
                             focal_point=focal_point[d],
                             view_up=view_up[d])
-        renderer.reset_clipping_range()
-
-        print(".. taking photo!");
-
         # window.show(renderer,reset_camera=False)
+        record(renderer, out_path='images/'+imagename+'_'+views[d]+'_flipped.png', size=(800, 800))
 
-        record(renderer, out_path='images/'+imagename+'_'+views[d]+'.png', size=(800, 800))
-
-        if camera_flip[d] != False:
-
-            camera_pos[d][camera_flip[d]] *= -1
-
-            renderer.set_camera(position=camera_pos[d],
-                                focal_point=focal_point[d],
-                                view_up=view_up[d])
-            # window.show(renderer,reset_camera=False)
-            record(renderer, out_path='images/'+imagename+'_'+views[d]+'_flipped.png', size=(800, 800))
-
-        renderer.clear()
+    renderer.clear()
 
 # print("processing all tracts") # THIS IS TO GENERATE IMAGE OF ALL TRACTS COMBINED TOGETHER
 for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
