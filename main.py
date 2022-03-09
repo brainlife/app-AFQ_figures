@@ -263,7 +263,7 @@ for file in tract_paths:
         # add flipped image path
         if camera_flip[d] != False:
             temp_dict = {}
-            temp_dict["filename"]='images'+imagename+'_'+views[d]+'_flipped.png'
+            temp_dict["filename"]='images/'+imagename+'_'+views[d]+'_flipped.png'
 
             temp_dict["name"]=imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' flipped view'
 
@@ -347,7 +347,7 @@ for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
     renderer.add(slice_actor)
 
     # window.show(renderer,reset_camera=False)
-    record(renderer, out_path='images/alltracts_'+'_'+views[d]+'.png', size=(800, 800))
+    record(renderer, out_path='images/alltracts_'+views[d]+'.png', size=(800, 800))
 
     if camera_flip[d] != False:
 
@@ -357,7 +357,7 @@ for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
                             focal_point=focal_point[d],
                             view_up=view_up[d])
 
-        record(renderer, out_path='images/alltracts_'+'_'+views[d]+'_flipped.png', size=(800, 800))
+        record(renderer, out_path='images/alltracts_'+views[d]+'_flipped.png', size=(800, 800))
 
 # print("saving images.json")
 json_file['images'] = file_list
