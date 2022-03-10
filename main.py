@@ -291,7 +291,7 @@ for idx, file in enumerate(tract_paths):
             file_list.append(temp_dict)
 
         #stream_actor = actor.streamtube(bundle, colors=cm.colors[counter], linewidth=0.5)
-	stream_actor = actor.streamtube(bundle, colors=cm[idx], linewidth=0.5)
+        stream_actor = actor.streamtube(bundle, colors=cm[idx], linewidth=0.5)
 
         renderer.add(stream_actor)
         slice_actor = actor.slicer(t1_img, affine)
