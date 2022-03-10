@@ -263,7 +263,7 @@ for idx, file in enumerate(tract_paths):
     # all_colors.append(tract['color'])
     #all_colors.append(cm.colors[counter])
     #counter=counter+1
-    all_colors.append(cm[idx])
+    all_colors.append(cm.colors[idx])
     split_name = tract['name'].split(' ')
     imagename = '_'.join(split_name)
 
