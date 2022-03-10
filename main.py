@@ -16,8 +16,18 @@ import json
 import numpy as np
 import nibabel as nib
 from fury import window, actor,ui
+from matplotlib.colors import ListedColormap
+from fury import colormap
 
 from lib import record, close
+
+
+# define useful function for generating colormap
+def generateDistinguishableCmap(nb_colors):
+    colors = colormap.distinguishable_colormap((0, 0, 0), nb_colors=nb_colors)
+    cm = ListedColormap(colors)
+
+    return cm
 
 # THIS IS IMPORTANT FOR RUNNING VIA DOCKER. UNCOMMENT WHEN TESTING WITH DOCKER CONTAINER
 from xvfbwrapper import Xvfb
@@ -206,6 +216,10 @@ else:
         if item['name'] in tract_names:
             tract_paths.append(config["AFQ"] + "/" + item['filename'])
 
+# create distinguishable colormap using the length of the tract_paths
+cm = generateDistinguishableCmap(len(tract_paths))
+
+counter=0
 for file in tract_paths:
     print("loading %s" % file)
     with open(file) as data_file:
@@ -215,7 +229,10 @@ for file in tract_paths:
     min_y = 0
     min_z = 0
 
-    if np.shape(tract['coords'])[0] == 1 & np.shape(tract['coords'])[1] == 1:
+    if len(np.shape(tract['coords'])) < 3:
+        tract['coords'] = [tract['coords']]
+
+    if (np.shape(tract['coords'])[0] == 1 and np.shape(tract['coords'])[1] == 1) or (np.shape(tract['coords'])[0] == 1 and np.shape(tract['coords'])[1] == 3):
         templine = np.zeros([len(tract['coords'][0][0]), 3])
         templine[:, 0] = tract['coords'][0][0]
         templine[:, 1] = tract['coords'][0][1]
@@ -230,8 +247,6 @@ for file in tract_paths:
         if np.shape(tract['coords'])[0] < np.shape(tract['coords'])[1]:
             tract['coords'] = np.array(tract['coords']).swapaxes(0,1)
         for i in range(len(tract['coords'])):
-            if len(np.shape(tract['coords'][i])) < 3:
-                tract['coords'][i] = [tract['coords'][i]]
             templine = np.zeros([len(tract['coords'][i][0][0]), 3])
             templine[:, 0] = tract['coords'][i][0][0]
             templine[:, 1] = tract['coords'][i][0][1]
@@ -245,7 +260,9 @@ for file in tract_paths:
                 min_z = np.round(np.min(bundle[i][2]))
     #slice_view = [min_x,min_y,min_z]
     all_bundles.append(bundle)
-    all_colors.append(tract['color'])
+    # all_colors.append(tract['color'])
+    all_colors.append(cm.colors[counter])
+    counter=counter+1
     split_name = tract['name'].split(' ')
     imagename = '_'.join(split_name)
 
