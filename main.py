@@ -289,7 +289,7 @@ for file in tract_paths:
             temp_dict["desc"]= 'This figure shows '+ imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' flipped view'
             file_list.append(temp_dict)
 
-        stream_actor = actor.streamtube(bundle, colors=tract['color'], linewidth=0.5)
+        stream_actor = actor.streamtube(bundle, colors=cm.colors[counter], linewidth=0.5)
 
         renderer.add(stream_actor)
         slice_actor = actor.slicer(t1_img, affine)
