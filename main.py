@@ -230,6 +230,8 @@ for file in tract_paths:
         if np.shape(tract['coords'])[0] < np.shape(tract['coords'])[1]:
             tract['coords'] = np.array(tract['coords']).swapaxes(0,1)
         for i in range(len(tract['coords'])):
+            if len(np.shape(tract['coords'][i])) < 3:
+                tract['coords'][i] = [tract['coords'][i]]
             templine = np.zeros([len(tract['coords'][i][0][0]), 3])
             templine[:, 0] = tract['coords'][i][0][0]
             templine[:, 1] = tract['coords'][i][0][1]
