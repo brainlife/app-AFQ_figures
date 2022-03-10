@@ -221,9 +221,9 @@ for file in tract_paths:
         templine[:, 1] = tract['coords'][0][1]
         templine[:, 2] = tract['coords'][0][2]
         bundle.append(templine)
-        min_x = np.min(bundle[0])
-        min_y = np.min(bundle[1])
-        min_z = np.min(bundle[2])
+        # min_x = np.min(bundle[0])
+        # min_y = np.min(bundle[1])
+        # min_z = np.min(bundle[2])
     elif len(tract['coords']) == 0:
         bundle = [[],[],[]]
     elif np.shape(tract['coords'])[0] > 1 or np.shape(tract['coords'])[1] > 1:
