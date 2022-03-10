@@ -219,8 +219,8 @@ else:
 # create distinguishable colormap using the length of the tract_paths
 cm = generateDistinguishableCmap(len(tract_paths))
 
-counter=0
-for file in tract_paths:
+#counter=0
+for idx, file in enumerate(tract_paths):
     print("loading %s" % file)
     with open(file) as data_file:
         tract = json.load(data_file)
@@ -261,8 +261,9 @@ for file in tract_paths:
     #slice_view = [min_x,min_y,min_z]
     all_bundles.append(bundle)
     # all_colors.append(tract['color'])
-    all_colors.append(cm.colors[counter])
-    counter=counter+1
+    #all_colors.append(cm.colors[counter])
+    #counter=counter+1
+    all_colors.append(cm[idx])
     split_name = tract['name'].split(' ')
     imagename = '_'.join(split_name)
 
@@ -289,7 +290,8 @@ for file in tract_paths:
             temp_dict["desc"]= 'This figure shows '+ imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' flipped view'
             file_list.append(temp_dict)
 
-        stream_actor = actor.streamtube(bundle, colors=cm.colors[counter], linewidth=0.5)
+        #stream_actor = actor.streamtube(bundle, colors=cm.colors[counter], linewidth=0.5)
+	stream_actor = actor.streamtube(bundle, colors=cm[idx], linewidth=0.5)
 
         renderer.add(stream_actor)
         slice_actor = actor.slicer(t1_img, affine)
