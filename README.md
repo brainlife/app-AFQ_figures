@@ -3,9 +3,9 @@
 
 # app-wmc_figures
 
-This service creates 6 figures of each specified white matter tract (any wmc structure): axial, axial_flipped, sagittal_left, sagittal_right, coronal, and coronal_flipped. Please choose the t1 image slices you would like displayed. 
+This service creates 6 figures of each specified white matter tract (any wmc structure): axial, axial_flipped, sagittal_left, sagittal_right, coronal, and coronal_flipped. It also creates 6 figures containing all the tracts.
 
-![screenshot](screenshot.png)
+![screenshot](snapshot-wmc-figures.png)
 
 ### Author
 - Lindsey Kitchell (kitchell@indiana.edu)
@@ -60,9 +60,9 @@ If you have singularity installed on your local machine:
 
 You would need a White Matter Classification (WMC) structure and a T1w image to select the anatomical slices from. The default slices work well for the HCP t1 images if they have not been re-ACPC aligned. If you have ACPC aligned your t1 images using the ACPC alignment app on brainlife, the following values are a good starting point: coronal = 105, sagittal = 89, axial = 65. The img_min and img_max values refer to the value range displayed for the t1 image. The value range is calculated as follow (mean + img_min * std, mean + img_max * std). The default values are a good starting place, adjust them if your t1 is too dark or too light.
 If you only want images of a set of specified tracts (the default is to create the images of all the wmc tracts), you can specify their tract names. For tract names derived from common segmentations available on brainlife, please refer to the following links:
-- AFQ (Yeatman, 2012): https://github.com/brainlife/app-AFQ_figures/blob/master/TRACT_CODES_AFQ.md
-- TractSeg (Wasserthal, 2018):  https://github.com/brainlife/app-AFQ_figures/blob/master/TRACT_CODES_TRACTSEG.md
-- White Matter Anatomy Segmentation (Bullock et al, 2019):  https://github.com/brainlife/app-AFQ_figures/blob/master/TRACT_CODES_WMASEG.md
+- AFQ (Yeatman, 2012): https://github.com/brainlife/app-wmc_figures/blob/master/TRACT_CODES_AFQ.md
+- TractSeg (Wasserthal, 2018):  https://github.com/brainlife/app-wmc_figures/blob/master/TRACT_CODES_TRACTSEG.md
+- White Matter Anatomy Segmentation (Bullock et al, 2019):  https://github.com/brainlife/app-wmc_figures/blob/master/TRACT_CODES_WMASEG.md
 
 ## Output
 
