@@ -119,7 +119,7 @@ slice_view = [axial_view,sagittal_view,coronal_view]
 
 
 # HERE'S CODE FOR GENERATING JUST A SINGLE TRACK AT A TIME FOR QA PURPOSES
-# file = config["AFQ"]+'/1.json'
+# file = config["wmc"]+'/1.json'
 # with open(file) as data_file:
 #     tract = json.load(data_file)
 # bundle = []
@@ -200,21 +200,21 @@ slice_view = [axial_view,sagittal_view,coronal_view]
 renderer = window.Scene()
 
 # iterate through all tracts
-#for file in sorted(glob.glob(config["AFQ"] + "/*.json")):
-#    if file != config["AFQ"]+ '/tracts.json':
+#for file in sorted(glob.glob(config["wmc"] + "/*.json")):
+#    if file != config["wmc"]+ '/tracts.json':
 
 tract_paths = []
 if config['tracts'] == "":
-    for file in sorted(glob.glob(config["AFQ"] + "/*.json")):
-        if file != config["AFQ"]+ '/tracts.json':
+    for file in sorted(glob.glob(config["wmc"] + "/*.json")):
+        if file != config["wmc"]+ '/tracts.json':
             tract_paths.append(file)
 else:
     tract_names = config['tracts']
-    with open(config["AFQ"]+ '/tracts.json') as data_file:
+    with open(config["wmc"]+ '/tracts.json') as data_file:
         all_tracts = json.load(data_file)
     for item in all_tracts:
         if item['name'] in tract_names:
-            tract_paths.append(config["AFQ"] + "/" + item['filename'])
+            tract_paths.append(config["wmc"] + "/" + item['filename'])
 
 # create distinguishable colormap using the length of the tract_paths
 cm = generateDistinguishableCmap(len(tract_paths))
