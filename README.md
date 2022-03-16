@@ -1,25 +1,40 @@
 [![Abcdspec-compliant](https://img.shields.io/badge/ABCD_Spec-v1.1-green.svg)](https://github.com/brain-life/abcd-spec)
-[![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-bl.app.145-blue.svg)](https://doi.org/10.25663/brainlife.app.145)
+[![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-brainlie.app.607-blue.svg)](https://doi.org/10.25663/brainlife.app.607)
 
-# app-plotAFQ
+# app-wmc_figures
 
-This App plots the fibers outputted from app-tractclassification.
+This service creates 6 figures of each specified white matter tract (any wmc structure): axial, axial_flipped, sagittal_left, sagittal_right, coronal, and coronal_flipped. Please choose the t1 image slices you would like displayed. 
 
 ![screenshot](screenshot.png)
 
 ### Author
 - Lindsey Kitchell (kitchell@indiana.edu)
+- Brad Caron ([@bacaron](https://github.com/bacaron))
+- Giulia Bertò ([@giulia-berto](https://github.com/giulia-berto))
+- Anibal Sólon ([@anibalsolon](https://github.com/anibalsolon))
 
+### Project director
+- Franco Pestilli ([@francopestilli](https://github.com/francopestilli))
 
-### Funding 
+### Funding Acknowledgement
+brainlife.io is publicly funded and for the sustainability of the project it is helpful to Acknowledge the use of the platform. We kindly ask that you acknowledge the funding below in your code and publications. Copy and past the following lines into your repository when using this code.
+
 [![NSF-BCS-1734853](https://img.shields.io/badge/NSF_BCS-1734853-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1734853)
 [![NSF-BCS-1636893](https://img.shields.io/badge/NSF_BCS-1636893-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1636893)
+[![NSF-ACI-1916518](https://img.shields.io/badge/NSF_ACI-1916518-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1916518)
+[![NSF-IIS-1912270](https://img.shields.io/badge/NSF_IIS-1912270-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1912270)
+[![NIH-NIBIB-R01EB029272](https://img.shields.io/badge/NIH_NIBIB-R01EB029272-green.svg)](https://grantome.com/grant/NIH/R01-EB029272-01)
+
+### Citations
+We ask that you cite the following articles when publishing papers that used data, code or other resources created by the brainlife.io community.
+
+1. Avesani, P., McPherson, B., Hayashi, S. et al. The open diffusion data derivatives, brain data upcycling via integrated publishing of derivatives and reproducible open cloud services. Sci Data 6, 69 (2019). [https://doi.org/10.1038/s41597-019-0073-y](https://doi.org/10.1038/s41597-019-0073-y)
 
 ## Running the App 
 
 ### On Brainlife.io
 
-You can submit this App online at [https://brainlife.io/app/5967b45e81d7ef0021538e89](https://brainlife.io/app/5967b45e81d7ef0021538e89) via the "Execute" tab.
+You can submit this App online at [https://brainlife.io/app/5967b45e81d7ef0021538e89](https://doi.org/10.25663/brainlife.app.607) via the "Execute" tab.
 
 ### Running Locally (on your machine)
 
@@ -31,23 +46,28 @@ You can submit this App online at [https://brainlife.io/app/5967b45e81d7ef002153
     "coronal": 85,
     "sagittal": 74,
     "axial": 48,
-    "AFQ": "testdata/track/tracts",
+    "wmc": "testdata/track/tracts",
     "t1": "testdata/anat/t1.nii.gz",
     "img_max": 2,
     "img_min": -0.5
 }
 ```
-If you have singlarity install on your local machine:
+If you have singularity installed on your local machine:
 
-3. Launch the App by executing `main`
+3. Launch the App by executing `main`.
 
-### Sample Datasets
+### Inputs
 
-If you don't have your own input file, you can download sample datasets from Brainlife.io, or you can use [Brainlife CLI](https://github.com/brain-life/cli).
+You would need a White Matter Classification (WMC) structure and a T1w image to select the anatomical slices from. The default slices work well for the HCP t1 images if they have not been re-ACPC aligned. If you have ACPC aligned your t1 images using the ACPC alignment app on brainlife, the following values are a good starting point: coronal = 105, sagittal = 89, axial = 65. The img_min and img_max values refer to the value range displayed for the t1 image. The value range is calculated as follow (mean + img_min * std, mean + img_max * std). The default values are a good starting place, adjust them if your t1 is too dark or too light.
+
 
 ## Output
 
-The output of this app will be a folder with images of the AFQ tracts.
+The output of this app will be a folder with images of the specified wmc tracts.
+
+### Sample Datasets
+
+If you don't have your own input file, you can download sample datasets from brainlife, or you can use [Brainlife CLI](https://github.com/brain-life/cli).
 
 ### Dependencies
 
