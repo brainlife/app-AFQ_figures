@@ -5,7 +5,7 @@
 
 This service creates 6 figures of each specified white matter tract (any wmc structure): axial, axial_flipped, sagittal_left, sagittal_right, coronal, and coronal_flipped. It also creates 6 figures containing all the tracts.
 
-![](snapshot-wmc-figures.png)
+![](snapshot-wmc-figures.png){ width=50% }
 
 ### Authors
 - Lindsey Kitchell (kitchell@indiana.edu)
