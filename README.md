@@ -2,7 +2,6 @@
 [![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-brainlie.app.607-blue.svg)](https://doi.org/10.25663/brainlife.app.607)
 
 # app-wmc_figures
-
 This service creates 6 figures of each specified white matter tract (any wmc structure): axial, axial_flipped, sagittal_left, sagittal_right, coronal, and coronal_flipped. It also creates 6 figures containing all the tracts.
 
 <img src="https://raw.githubusercontent.com/brainlife/app-wmc_figures/1.0/snapshot-wmc-figures.png" width="750">
