@@ -81,14 +81,6 @@ else:
 # set brightness range
 value_range = (mean - img_min * std, mean + img_max * std)
 
-# load tractogram
-# print("loading tractogram")
-# track = nib.streamlines.load(config["track"])
-
-# # set stream actor for visualization
-# print("loading streamlines into visualizer")
-# stream_actor = actor.line(track.streamlines)
-
 # set camera position
 camera_pos = [[0, 0, 450], [-450, 0, 0], [0, -450, 0], [450, 0, 0]]
 camera_flip = [2, False, 1, False]
@@ -116,92 +108,7 @@ else:
 
 slice_view = [axial_view,sagittal_view,coronal_view]
 
-
-
-# HERE'S CODE FOR GENERATING JUST A SINGLE TRACK AT A TIME FOR QA PURPOSES
-# file = config["wmc"]+'/1.json'
-# with open(file) as data_file:
-#     tract = json.load(data_file)
-# bundle = []
-# min_x = 0
-# min_y = 0
-# min_z = 0
-# if len(tract['coords']) == 1:
-#     templine = np.zeros([len(tract['coords'][0][0]), 3])
-#     templine[:, 0] = tract['coords'][0][0]
-#     templine[:, 1] = tract['coords'][0][1]
-#     templine[:, 2] = tract['coords'][0][2]
-#     bundle.append(templine)
-#     min_x = np.min(bundle[0])
-#     min_y = np.min(bundle[1])
-#     min_z = np.min(bundle[2])
-# elif len(tract['coords']) == 0:
-#     bundle = [[],[],[]]
-# elif len(tract['coords']) > 1:
-#     for i in range(len(tract['coords'])):
-#         templine = np.zeros([len(tract['coords'][i][0][0]), 3])
-#         templine[:, 0] = tract['coords'][i][0][0]
-#         templine[:, 1] = tract['coords'][i][0][1]
-#         templine[:, 2] = tract['coords'][i][0][2]
-#         bundle.append(templine)
-#         if np.min(bundle[i][0]) < min_x:
-#             min_x = np.round(np.min(bundle[i][0]))
-#         if np.min(bundle[i][1]) < min_y:
-#             min_y = np.round(np.min(bundle[i][1]))
-#         if np.min(bundle[i][2]) < min_z:
-#             min_z = np.round(np.min(bundle[i][2]))
-# #slice_view = [min_x,min_y,min_z]
-# all_bundles.append(bundle)
-# all_colors.append(tract['color'])
-# split_name = tract['name'].split(' ')
-# imagename = '_'.join(split_name)
-
-# print(np.array(bundle).shape)
-
-# for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
-#     print(".. rendering tracts")
-#     print(d)
-
-#     renderer = window.Scene()
-#     stream_actor = actor.streamtube(bundle, colors=tract['color'], linewidth=0.5)
-
-#     renderer.add(stream_actor)
-#     slice_actor = actor.slicer(t1_img, affine)
-#     slice_actor.opacity(1)
-#     if d == 0: # axial
-#         slice_actor.display(z=int(slice_view[2]))
-#     elif d == 2: # coronal
-#         slice_actor.display(y=int(slice_view[1]))
-#     else: # left/right sagittal
-#         slice_actor.display(x=int(slice_view[0]))
-
-#     renderer.add(slice_actor)
-#     renderer.set_camera(position=camera_pos[d],
-#                         focal_point=focal_point[d],
-#                         view_up=view_up[d])
-#     renderer.reset_clipping_range()
-
-#     print(".. taking photo!");
-
-#     # window.show(renderer,reset_camera=False)
-
-#     window.record(renderer, out_path='images/'+imagename+'_'+views[d]+'.png', size=(800, 800))
-
-#     if camera_flip[d] != False:
-
-#         camera_pos[d][camera_flip[d]] *= -1
-
-#         renderer.set_camera(position=camera_pos[d],
-#                             focal_point=focal_point[d],
-#                             view_up=view_up[d])
-#         # window.show(renderer,reset_camera=False)
-#         window.record(renderer, out_path='images/'+imagename+'_'+views[d]+'_flipped.png', size=(800, 800))
-
 renderer = window.Scene()
-
-# iterate through all tracts
-#for file in sorted(glob.glob(config["wmc"] + "/*.json")):
-#    if file != config["wmc"]+ '/tracts.json':
 
 tract_paths = []
 if config['tracts'] == "":
@@ -219,7 +126,6 @@ else:
 # create distinguishable colormap using the length of the tract_paths
 cm = generateDistinguishableCmap(len(tract_paths))
 
-#counter=0
 for idx, file in enumerate(tract_paths):
     print("loading %s" % file)
     with open(file) as data_file:
@@ -238,9 +144,6 @@ for idx, file in enumerate(tract_paths):
         templine[:, 1] = tract['coords'][0][1]
         templine[:, 2] = tract['coords'][0][2]
         bundle.append(templine)
-        # min_x = np.min(bundle[0])
-        # min_y = np.min(bundle[1])
-        # min_z = np.min(bundle[2])
     elif len(tract['coords']) == 0:
         bundle = [[],[],[]]
     elif np.shape(tract['coords'])[0] > 1 or np.shape(tract['coords'])[1] > 1:
@@ -258,11 +161,7 @@ for idx, file in enumerate(tract_paths):
                 min_y = np.round(np.min(bundle[i][1]))
             if np.min(bundle[i][2]) < min_z:
                 min_z = np.round(np.min(bundle[i][2]))
-    #slice_view = [min_x,min_y,min_z]
     all_bundles.append(bundle)
-    # all_colors.append(tract['color'])
-    #all_colors.append(cm.colors[counter])
-    #counter=counter+1
     all_colors.append(cm.colors[idx])
     split_name = tract['name'].split(' ')
     imagename = '_'.join(split_name)
@@ -311,8 +210,6 @@ for idx, file in enumerate(tract_paths):
 
         print(".. taking photo!");
 
-        # window.show(renderer,reset_camera=False)
-
         record(renderer, out_path='images/'+imagename+'_'+views[d]+'.png', size=(800, 800))
 
         if camera_flip[d] != False:
@@ -322,7 +219,6 @@ for idx, file in enumerate(tract_paths):
             renderer.set_camera(position=camera_pos[d],
                                 focal_point=focal_point[d],
                                 view_up=view_up[d])
-            # window.show(renderer,reset_camera=False)
             record(renderer, out_path='images/'+imagename+'_'+views[d]+'_flipped.png', size=(800, 800))
 
         renderer.clear()
