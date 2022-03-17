@@ -263,7 +263,6 @@ for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
 
     renderer.add(slice_actor)
 
-    # window.show(renderer,reset_camera=False)
     record(renderer, out_path='images/alltracts_'+views[d]+'.png', size=(800, 800))
 
     if camera_flip[d] != False:
