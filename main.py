@@ -193,7 +193,7 @@ for idx, file in enumerate(tract_paths):
         stream_actor = actor.streamtube(bundle, colors=cm.colors[idx], linewidth=0.5)
 
         renderer.add(stream_actor)
-        slice_actor = actor.slicer(t1_img, affine)
+        slice_actor = actor.slicer(t1_img, affine, value_range)
         slice_actor.opacity(1)
         if d == 0: # axial
             slice_actor.display(z=int(slice_view[2]))
