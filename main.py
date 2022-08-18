@@ -29,38 +29,6 @@ def generateDistinguishableCmap(nb_colors):
 
     return cm
 
-# define function that returns the slice actor
-def get_slice_actor(t1_img, affine, config, slice_view):
-
-    # if brightness min and max are set in config, use those
-    img_min = config["img_min"]
-    img_max = config["img_max"]
-
-    if (img_min != "") | (img_max != ""):
-        
-        if (img_min != "") & (img_max != ""):
-            # compute mean and standard deviation of t1 for brigthness adjustment
-            print("setting brightness")
-            mean, std = t1_img[t1_img > 0].mean(), t1_img[t1_img > 0].std()
-            # set brightness range
-            value_range = (mean - img_min * std, mean + img_max * std)
-            slice_actor = actor.slicer(t1_img, affine, value_range)
-        else:
-            print("error: both or none img_min and img_max should be defined.")
-            close()
-
-    else:
-        slice_actor = actor.slicer(t1_img, affine)   
-
-    if d == 0: # axial
-        slice_actor.display(z=int(slice_view[0]))
-    elif d == 2: # coronal
-        slice_actor.display(y=int(slice_view[2]))
-    else: # left/right sagittal
-        slice_actor.display(x=int(slice_view[1]))
-
-    return slice_actor    
-
 # THIS IS IMPORTANT FOR RUNNING VIA DOCKER. UNCOMMENT WHEN TESTING WITH DOCKER CONTAINER
 from xvfbwrapper import Xvfb
 
@@ -95,6 +63,24 @@ sz = np.shape(t1_img)
 print("setting affine transform")
 affine = t1.affine
 
+# compute mean and standard deviation of t1 for brigthness adjustment
+print("setting brightness")
+mean, std = t1_img[t1_img > 0].mean(), t1_img[t1_img > 0].std()
+
+# if brightness minimum is set in config, use that; else, set as min=0.5, max=2
+if config["img_min"] == "":
+	img_min = 0.5
+else:
+	img_min = config["img_min"]
+
+if config["img_max"] == "":
+	img_max = 3
+else:
+	img_max = config["img_max"]
+
+# set brightness range
+value_range = (mean - img_min * std, mean + img_max * std)
+
 # set camera position
 camera_pos = [[0, 0, 450], [-450, 0, 0], [0, -450, 0], [450, 0, 0]]
 camera_flip = [2, False, 1, False]
@@ -106,7 +92,7 @@ views = ['axial', 'sagittal_left', 'coronal', 'sagittal_right']
 
 # if slices are different from defaults, use those; else, compute midslices
 if config['axial'] == "":
-	axial_view = sz[2]/2
+	axial_view = sz[1]/2
 else:
 	axial_view = config['axial']
 
@@ -116,7 +102,7 @@ else:
 	sagittal_view = config['sagittal']
 
 if config['coronal'] == "":
-	coronal_view = sz[1]/2
+	coronal_view = sz[2]/2
 else:
 	coronal_view = config['coronal']
 
@@ -180,6 +166,8 @@ for idx, file in enumerate(tract_paths):
     split_name = tract['name'].split(' ')
     imagename = '_'.join(split_name)
 
+    print(np.array(bundle).shape)
+
     for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
         print(".. rendering tracts")
         print(d)
@@ -195,22 +183,33 @@ for idx, file in enumerate(tract_paths):
         if camera_flip[d] != False:
             temp_dict = {}
             temp_dict["filename"]='images/'+imagename+'_'+views[d]+'_flipped.png'
+
             temp_dict["name"]=imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' flipped view'
+
             temp_dict["desc"]= 'This figure shows '+ imagename.replace('_', ' ')+' '+views[d].replace('_', ' ') + ' flipped view'
             file_list.append(temp_dict)
 
+        #stream_actor = actor.streamtube(bundle, colors=cm.colors[counter], linewidth=0.5)
         stream_actor = actor.streamtube(bundle, colors=cm.colors[idx], linewidth=0.5)
+
         renderer.add(stream_actor)
+        slice_actor = actor.slicer(t1_img, affine, value_range)
+        slice_actor.opacity(1)
+        if d == 0: # axial
+            slice_actor.display(z=int(slice_view[2]))
+        elif d == 2: # coronal
+            slice_actor.display(y=int(slice_view[1]))
+        else: # left/right sagittal
+            slice_actor.display(x=int(slice_view[0]))
 
-        slice_actor = get_slice_actor(t1_img, affine, config, slice_view)
         renderer.add(slice_actor)
-
         renderer.set_camera(position=camera_pos[d],
                             focal_point=focal_point[d],
                             view_up=view_up[d])
         renderer.reset_clipping_range()
 
         print(".. taking photo!");
+
         record(renderer, out_path='images/'+imagename+'_'+views[d]+'.png', size=(800, 800))
 
         if camera_flip[d] != False:
@@ -247,17 +246,23 @@ for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
     for z in range(len(all_bundles)):
         stream_actor = actor.streamtube(all_bundles[z], colors=all_colors[z],
                                         linewidth=.5)
+        renderer.set_camera(position=camera_pos[d],
+                            focal_point=focal_point[d],
+                            view_up=view_up[d])
+
         renderer.add(stream_actor)
 
-    slice_actor = get_slice_actor(t1_img, affine, config, slice_view)
+    slice_actor = actor.slicer(t1_img, affine, value_range)
+
+    if d == 0:
+        slice_actor.display(z=int(slice_view[0]))
+    elif d == 2:
+        slice_actor.display(y=int(slice_view[2]))
+    else:
+        slice_actor.display(x=int(slice_view[1]))
+
     renderer.add(slice_actor)
 
-    renderer.set_camera(position=camera_pos[d],
-                        focal_point=focal_point[d],
-                        view_up=view_up[d])
-    renderer.reset_clipping_range()
-
-    print(".. taking photo!");
     record(renderer, out_path='images/alltracts_'+views[d]+'.png', size=(800, 800))
 
     if camera_flip[d] != False:
@@ -267,14 +272,14 @@ for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
         renderer.set_camera(position=camera_pos[d],
                             focal_point=focal_point[d],
                             view_up=view_up[d])
-        record(renderer, out_path='images/alltracts_'+views[d]+'_flipped.png', size=(800, 800))
 
-    renderer.clear()
+        record(renderer, out_path='images/alltracts_'+views[d]+'_flipped.png', size=(800, 800))
 
 # print("saving images.json")
 json_file['images'] = file_list
 with open('images.json', 'w') as f:
     f.write(json.dumps(json_file, indent=4))
+print(len(file_list))
 
 close()
 
