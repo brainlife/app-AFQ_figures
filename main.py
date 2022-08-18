@@ -82,7 +82,7 @@ views = ['axial', 'sagittal_left', 'coronal', 'sagittal_right']
 
 # if slices are different from defaults, use those; else, compute midslices
 if config['axial'] == "":
-	axial_view = sz[1]/2
+	axial_view = sz[2]/2
 else:
 	axial_view = config['axial']
 
@@ -92,7 +92,7 @@ else:
 	sagittal_view = config['sagittal']
 
 if config['coronal'] == "":
-	coronal_view = sz[2]/2
+	coronal_view = sz[1]/2
 else:
 	coronal_view = config['coronal']
 
@@ -191,11 +191,11 @@ for idx, file in enumerate(tract_paths):
             slice_actor = actor.slicer(t1_img, affine)   
 
         if d == 0: # axial
-            slice_actor.display(z=int(slice_view[2]))
+            slice_actor.display(z=int(slice_view[0]))
         elif d == 2: # coronal
-            slice_actor.display(y=int(slice_view[1]))
+            slice_actor.display(y=int(slice_view[2]))
         else: # left/right sagittal
-            slice_actor.display(x=int(slice_view[0]))
+            slice_actor.display(x=int(slice_view[1]))
 
         renderer.add(slice_actor)
         renderer.set_camera(position=camera_pos[d],
