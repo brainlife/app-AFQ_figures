@@ -67,19 +67,9 @@ affine = t1.affine
 print("setting brightness")
 mean, std = t1_img[t1_img > 0].mean(), t1_img[t1_img > 0].std()
 
-# if brightness minimum is set in config, use that; else, set as min=0.5, max=2
-if config["img_min"] == "":
-	img_min = 0.5
-else:
-	img_min = config["img_min"]
-
-if config["img_max"] == "":
-	img_max = 3
-else:
-	img_max = config["img_max"]
-
-# set brightness range
-value_range = (mean - img_min * std, mean + img_max * std)
+# if brightness min and max are set in config, use those
+img_min = config["img_min"]
+img_max = config["img_max"]
 
 # set camera position
 camera_pos = [[0, 0, 450], [-450, 0, 0], [0, -450, 0], [450, 0, 0]]
@@ -193,8 +183,13 @@ for idx, file in enumerate(tract_paths):
         stream_actor = actor.streamtube(bundle, colors=cm.colors[idx], linewidth=0.5)
 
         renderer.add(stream_actor)
-        slice_actor = actor.slicer(t1_img, affine, value_range)
-        slice_actor.opacity(1)
+        if (img_min != "") & (img_max != ""):
+            # set brightness range
+            value_range = (mean - img_min * std, mean + img_max * std)
+            slice_actor = actor.slicer(t1_img, affine, value_range)
+        else:
+            slice_actor = actor.slicer(t1_img, affine)   
+
         if d == 0: # axial
             slice_actor.display(z=int(slice_view[2]))
         elif d == 2: # coronal
@@ -252,7 +247,12 @@ for d in range(len(camera_pos)):  # directions: axial, sagittal, coronal
 
         renderer.add(stream_actor)
 
-    slice_actor = actor.slicer(t1_img, affine, value_range)
+    if (img_min != "") & (img_max != ""):
+        # set brightness range
+        value_range = (mean - img_min * std, mean + img_max * std)
+        slice_actor = actor.slicer(t1_img, affine, value_range)
+    else:
+        slice_actor = actor.slicer(t1_img, affine)   
 
     if d == 0:
         slice_actor.display(z=int(slice_view[0]))
