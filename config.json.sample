@@ -1,9 +1,10 @@
 {
-	"anat":	"/path/to/data/anat/t1.nii.gz",
-	"AFQ":	"/path/to/data/wmc/tracts",
+	"anat":	"/path/to/data/t1.nii.gz",
+	"wmc":	"/path/to/data/wmc/tracts",
 	"axial":	"",
 	"sagittal":	"",
 	"coronal":	"",
 	"img_min":	"",
-	"img_max":	""
+	"img_max": "",
+	"tracts": ""
 }
