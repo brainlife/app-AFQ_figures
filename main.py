@@ -37,16 +37,18 @@ def get_slice_actor(t1_img, affine, config, slice_view):
     img_max = config["img_max"]
 
     if (img_min != "") | (img_max != ""):
-        print("error: both or none img_min and img_max should be defined.")
-        close()
+        
+        if (img_min != "") & (img_max != ""):
+            # compute mean and standard deviation of t1 for brigthness adjustment
+            print("setting brightness")
+            mean, std = t1_img[t1_img > 0].mean(), t1_img[t1_img > 0].std()
+            # set brightness range
+            value_range = (mean - img_min * std, mean + img_max * std)
+            slice_actor = actor.slicer(t1_img, affine, value_range)
+        else:
+            print("error: both or none img_min and img_max should be defined.")
+            close()
 
-    if (img_min != "") & (img_max != ""):
-        # compute mean and standard deviation of t1 for brigthness adjustment
-        print("setting brightness")
-        mean, std = t1_img[t1_img > 0].mean(), t1_img[t1_img > 0].std()
-        # set brightness range
-        value_range = (mean - img_min * std, mean + img_max * std)
-        slice_actor = actor.slicer(t1_img, affine, value_range)
     else:
         slice_actor = actor.slicer(t1_img, affine)   
 
