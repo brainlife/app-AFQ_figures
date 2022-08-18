@@ -48,7 +48,8 @@ You can submit this App online at [https://brainlife.io/app/5967b45e81d7ef002153
     "wmc": "testdata/track/tracts",
     "t1": "testdata/anat/t1.nii.gz",
     "img_max": 2,
-    "img_min": -0.5
+    "img_min": -0.5,
+    "tracts": ""
 }
 ```
 If you have singularity installed on your local machine:
@@ -57,7 +58,7 @@ If you have singularity installed on your local machine:
 
 ### Inputs
 
-You would need a White Matter Classification (WMC) structure and a T1w image to select the anatomical slices from. The default slices work well for the HCP t1 images if they have not been re-ACPC aligned. If you have ACPC aligned your t1 images using the ACPC alignment app on brainlife, the following values are a good starting point: coronal = 105, sagittal = 89, axial = 65. The img_min and img_max values refer to the value range displayed for the t1 image. The value range is calculated as follow (mean + img_min * std, mean + img_max * std). The default values are a good starting place, adjust them if your t1 is too dark or too light. \
+You would need a White Matter Classification (WMC) structure and a T1w image to select the anatomical slices from. The default slices work well for the HCP t1 images if they have not been re-ACPC aligned. If you have ACPC aligned your t1 images using the ACPC alignment app on brainlife, the following values are a good starting point: coronal = 105, sagittal = 89, axial = 65. The img_min and img_max values refer to the value range displayed for the t1 image. The value range is calculated as follow (mean + img_min * std, mean + img_max * std). The default values are a good starting place, adjust them if your t1 is too dark or too light. Warning: default values are img_min=0.5 and img_max=3 for branch 1.0 and original T1 brightness for branch 1.1. Please do not use other branches since they are outdated. \
 If you only want images of a set of specified tracts (the default is to create the images of all the wmc tracts), you can specify their tract codes. For tract codes derived from common segmentations available on brainlife, please refer to the following links:
 - AFQ (Yeatman, 2012): [TRACT_CODES_AFQ](https://github.com/brainlife/app-wmc_figures/blob/master/TRACT_CODES_AFQ.md)
 - TractSeg (Wasserthal, 2018): [TRACT_CODES_TRACTSEG](https://github.com/brainlife/app-wmc_figures/blob/master/TRACT_CODES_TRACTSEG.md)
